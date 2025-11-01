@@ -1,6 +1,7 @@
 import { useUser } from "../hooks/useUser";
 import CreatePropertyModal from "../components/CreatePropertyModal";
 import { useState } from "react";
+import {Link} from "react-router-dom";
 
 export default function Dashboard() {
   const { handleLogout } = useUser();
@@ -11,18 +12,18 @@ export default function Dashboard() {
       <div className="min-h-screen bg-white flex flex-col">
         {/* Navbar */}
         <header className="bg-blue-600 text-white flex justify-between items-center px-10 shadow">
-          <div className="flex items-center space-x-15">
+          <div className="flex items-center space-x-15 ">
             <div className="text-xl font-bold tracking-wide">recam</div>
             <nav className="flex space-x-8 text-sm">
-              <a href="#" className="hover:underline">
+              <Link to="/listing-cases" className="hover:underline">
                 Listing Cases
-              </a>
-              <a href="#" className="hover:underline">
+              </Link>
+              <Link to="/all-agents" className="hover:underline">
                 Agents
-              </a>
-              <a href="#" className="hover:underline">
+              </Link>
+              <Link to="/all-companies" className="hover:underline">
                 Photography Companies
-              </a>
+              </Link>
             </nav>
           </div>
 
@@ -131,6 +132,7 @@ export default function Dashboard() {
 
       {/* Modal */}
       {showModal && <CreatePropertyModal onClose={() => setShowModal(false)} />}
+     
     </>
   );
 }

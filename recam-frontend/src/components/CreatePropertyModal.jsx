@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createListing } from "../apis/listings.api";
+import { createListing } from "../apis/listingcases.api";
 
 export default function CreatePropertyModal({ onClose }) {
     // Define form data that matches backend DTO fields
@@ -64,7 +64,7 @@ export default function CreatePropertyModal({ onClose }) {
                 {/* Header */}
                 <div className="flex justify-between items-center border-b pb-3 mb-4">
                     <h2 className="text-xl font-semibold text-gray-800">Create Property</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-800 transition">
                         ✕
                     </button>
                 </div>
