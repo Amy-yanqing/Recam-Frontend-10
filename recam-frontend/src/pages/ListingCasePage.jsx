@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link,useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useUser } from "../hooks/useUser"
 import CreatePropertyModal from "../components/CreatePropertyModal";
-import { getAllListings,deleteListingById} from "../apis/listingcases.api"
+import { getAllListings, deleteListingById } from "../apis/listingcases.api"
 
 
 // Convert numeric PropertyType enum to readable text
@@ -61,18 +61,16 @@ export default function ListingCasePage() {
   }, [])
 
 
-  function handleEdit(id){
+  function handleEdit(id) {
     console.log("Edit listing with ID:", id)
-    
     navigate(`/edit-listing/${id}`)
-    // setOpenMenuId(null);
   }
 
-  function handleDelete(id){
-   const confirmDelete = window.confirm("Are you sure you want to delete this listing?")
-   if(confirmDelete){
-    deleteListingById(id);
-   }
+  function handleDelete(id) {
+    const confirmDelete = window.confirm("Are you sure you want to delete this listing?")
+    if (confirmDelete) {
+      deleteListingById(id);
+    }
   }
 
 
@@ -179,22 +177,26 @@ export default function ListingCasePage() {
                       #{index + 1}
                     </td>
                     <td className="p-3">{getPropertyTypeLabel(item.propertyType)}</td>
-                    <td className="p-3">{item.street},{item.city}</td>
-                    <td className="p-3">{item.createdAt ? item.createdAt : "11/1/2025"}</td>
+                    <td className="p-3">{item.street},{item.city},{item.state},{item.postcode}</td>
+                    <td className="p-3">{new Date(item.createdAt).toLocaleDateString('en-AU', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })}</td>
                     <td className="p-3">{getListcasesStatusLabel(item.listcaseStatus)}</td>
                     <td className="relative">
                       <button onClick={() =>
                         setOpenMenuId(openMenuId === item.id ? null : item.id)
-                        }
+                      }
                         className="px-2 text-gray-500 hover:text-gray-800 text-xl"
-                        
-                        >
+
+                      >
                         ...
                       </button>
                       {openMenuId === item.id && (
                         <div className="absolute right-30 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg text-sm z-10 w-28 ">
-                          <button onClick={()=>handleEdit(item.id)} className="block w-full px-4 py-2 text-left hover:bg-gray-100 ">Edit</button>
-                          <button onClick={()=>handleDelete(item.id)}  className="block w-full px-4 py-2 text-left hover:bg-gray-100 text-red-500">Delete</button>
+                          <button onClick={() => handleEdit(item.id)} className="block w-full px-4 py-2 text-left hover:bg-gray-100 ">Edit</button>
+                          <button onClick={() => handleDelete(item.id)} className="block w-full px-4 py-2 text-left hover:bg-gray-100 text-red-500">Delete</button>
                         </div>
                       )}
                     </td>
