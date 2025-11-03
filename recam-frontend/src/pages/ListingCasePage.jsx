@@ -44,19 +44,19 @@ export default function ListingCasePage() {
   const navigate = useNavigate();
 
 
-  useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await getAllListings();
+      console.log("API response:", res.data);
+      setListings(res.data);
+    } catch (err) {
+      console.error("Error fetching listings", err)
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const fetchData = async () => {
-      try {
-        const res = await getAllListings();
-        console.log("API response:", res.data);
-        setListings(res.data);
-      } catch (err) {
-        console.error("Error fetching listings", err)
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
     fetchData();
   }, [])
 
@@ -65,11 +65,14 @@ export default function ListingCasePage() {
     console.log("Edit listing with ID:", id)
     navigate(`/edit-listing/${id}`)
   }
-
-  function handleDelete(id) {
-    const confirmDelete = window.confirm("Are you sure you want to delete this listing?")
-    if (confirmDelete) {
-      deleteListingById(id);
+  
+  async function handleDelete(id) {
+    if (!window.confirm("Are you sure you want to delete this listing?")) return;
+    try {
+      await deleteListingById(id);
+      await fetchData();
+    } catch {
+      console.error("Failed to delete listing");
     }
   }
 
@@ -208,7 +211,10 @@ export default function ListingCasePage() {
         </main>
 
       </div>
-      {showModal && <CreatePropertyModal onClose={() => setShowModal(false)} />}
+      {showModal && <CreatePropertyModal
+        onClose={() => setShowModal(false)}
+        onCreated={fetchData}
+      />}
 
     </>
 
