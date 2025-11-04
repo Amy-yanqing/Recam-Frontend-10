@@ -9,7 +9,7 @@ import{ toast } from 'react-hot-toast';
 
 export default function EditListingCasePage() {
   const { id } = useParams();
-  const [listing, setListing] = useState({ street: "street1", city: "city1", state: "QLD", postcode: "1234" });
+  const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
 
   //Fetch listing details by ID
