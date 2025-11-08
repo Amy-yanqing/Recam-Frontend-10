@@ -70,12 +70,12 @@ export default function EditListingCasePage() {
           </p>
         </div>
         <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 mb-10">
-          <ModuleCard title="Photography" icon="📸" to={`/photo-upload/${4004}`} />
-          <ModuleCard title="Floor Plan" icon="📐" to={`/photo-upload/${4004}`} />
-          <ModuleCard title="Videography" icon="🎥" to={`/photo-upload/${4004}`} />
-          <ModuleCard title="VR Tour" icon="🕶️" to={`/photo-upload/${4004}`} />
-          <ModuleCard title="Agents" icon="👤" to={`/photo-upload/${4004}`} />
-          <ModuleCard title="Property Details" icon="🏠" to={`/photo-upload/${4004}`} />
+          <ModuleCard title="Photography" icon="📸" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="Floor Plan" icon="📐" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="Videography" icon="🎥" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="VR Tour" icon="🕶️" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="Agents" icon="👤" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="Property Details" icon="🏠" to={`/photo-upload/${listing.id}`} />
         </section>
 
         <button onClick={handleDeliver} className="bg-blue-500 text-gray-100 px-8 py-4 

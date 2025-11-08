@@ -20,7 +20,7 @@ export function useMedia() {
   // 删除媒体文件
   const deleteMedia = async (id) => {
     try {
-      await mediaAssetApi.deleteMedia(id);
+      await mediaAssetApi.deleteMediaAsset(id);
       toast.success("Media deleted successfully!");
     } catch (error) {
       console.error("Delete error:", error);
@@ -31,11 +31,11 @@ export function useMedia() {
   // 下载媒体文件
   const downloadMedia = async (media) => {
     try {
-      const res = await mediaAssetApi.downloadMedia(media.id);
+      const res = await mediaAssetApi.downloadMediaAsset(media.id);
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.download = media.fileName || "media.jpg";
+      link.download =`photo_${media.id}.jpg`;
       link.click();
     } catch (error) {
       console.error("Download error:", error);

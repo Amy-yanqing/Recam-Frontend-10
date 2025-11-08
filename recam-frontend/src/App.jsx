@@ -5,7 +5,7 @@ import ListingCasesPage from "./pages/ListingCasePage";
 import EditListingCasePage from "./pages/EditListingCasePage";
 import AgentsPage from "./pages/AgentsPage";
 import PhotographyCompanyPage from "./pages/photographyCompanyPage";
-import PhotoUploadTab from "./pages/PhotoUploadTab";
+import PhotoUploadPage from "./pages/PhotoUploadPage";
 import { Toaster } from 'react-hot-toast';
 
 
@@ -20,7 +20,7 @@ function App() {
         <Route path="/all-agents" element={<AgentsPage />} />
         <Route path="/all-companies" element={<PhotographyCompanyPage />} />
         <Route path="/edit-listing/:id" element={<EditListingCasePage />} />
-        <Route path="/photo-upload/:id" element={<PhotoUploadTab/>}/>
+        <Route path="/photo-upload/:id" element={<PhotoUploadPage/>}/>
       </Routes>
     </>
   );
