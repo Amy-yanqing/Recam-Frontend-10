@@ -117,15 +117,17 @@ export default function PhotoUploadPage() {
           <div className="bg-white border border-gray-200 p-6 rounded-md shadow-lg max-w-md w-full">
             {/* Modal Title */}
             <h2 className="text-xl font-bold mb-4">Upload Photos</h2>
-
+            <label className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition" >
+            Choose Files
             {/* Files Selecter */}
             <input
               type="file"
               multiple
               accept="image/*"
               onChange={handleFileChange}
-              className="mb-4 w-full"
+              className="hidden"
             />
+            </label>
 
             {/* Show Selected Files */}
             {selectedFiles.length > 0 && (
