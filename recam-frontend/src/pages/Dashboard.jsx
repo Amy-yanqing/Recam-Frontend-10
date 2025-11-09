@@ -1,55 +1,13 @@
-import { useUser } from "../hooks/useUser";
 import CreatePropertyModal from "../components/CreatePropertyModal";
 import { useState } from "react";
-import {Link} from "react-router-dom";
+
 
 export default function Dashboard() {
-  const { handleLogout } = useUser();
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
-        {/* Navbar */}
-        <header className="bg-blue-600 text-white flex justify-between items-center px-10 shadow">
-          <div className="flex items-center space-x-15 ">
-            <div className="text-xl font-bold tracking-wide">recam</div>
-            <nav className="flex space-x-8 text-sm">
-              <Link to="/listing-cases" className="hover:underline">
-                Listing Cases
-              </Link>
-              <Link to="/all-agents" className="hover:underline">
-                Agents
-              </Link>
-              <Link to="/all-companies" className="hover:underline">
-                Photography Companies
-              </Link>
-            </nav>
-          </div>
-
-          {/* Logout button */}
-          <button
-            onClick={handleLogout}
-            className="text-white hover:opacity-80 transition"
-            title="Logout"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 9V5.25a.75.75 0 00-.75-.75H5.25a.75.75 0 00-.75.75v13.5a.75.75 0 00.75.75h9.75a.75.75 0 00.75-.75V15m3 0l3-3m0 0l-3-3m3 3H9"
-              />
-            </svg>
-          </button>
-        </header>
-
         {/* Welcome Section */}
         <main>
           <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8 py-4">

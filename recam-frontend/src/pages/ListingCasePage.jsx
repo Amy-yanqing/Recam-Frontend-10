@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
-import { useUser } from "../hooks/useUser"
 import CreatePropertyModal from "../components/CreatePropertyModal";
 import { getAllListings, deleteListingById } from "../apis/listingcases.api"
 
@@ -36,17 +35,17 @@ function getListcasesStatusLabel(status) {
 
 export default function ListingCasePage() {
 
-  const { handleLogout } = useUser();
   const [listings, setListings] = useState([]);
-  const [searchTerm,setSearchTerm] = useState("");
-  const [error,setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const navigate = useNavigate();
 
 
-  const fetchData = async (searchQuery={}) => {
+  const fetchData = async (searchQuery = {}) => {
+    console.log("Fetching listing data...");
     setLoading(true);
     setError("");
     try {
@@ -63,23 +62,24 @@ export default function ListingCasePage() {
 
   useEffect(() => {
     fetchData();
+
   }, [])
 
-  useEffect(()=>{
-    const timer = setTimeout(()=>{
-      const query = searchTerm ? {searchTerm:searchTerm}:{};
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const query = searchTerm ? { searchTerm: searchTerm } : {};
       fetchData(query);
 
-    },400);
-    return()=>clearTimeout(timer);
-  },[searchTerm]); //what is the code logical here?
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]); //what is the code logical here?
 
 
   function handleEdit(id) {
     console.log("Edit listing with ID:", id)
     navigate(`/edit-listing/${id}`)
   }
-  
+
   async function handleDelete(id) {
     if (!window.confirm("Are you sure you want to delete this listing?")) return;
     setError("");
@@ -101,8 +101,8 @@ export default function ListingCasePage() {
     );
   }
 
-  if(error){
-    return(<div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
+  if (error) {
+    return (<div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
       {error}
     </div>)
 
@@ -111,40 +111,6 @@ export default function ListingCasePage() {
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
-        {/*Navbar*/}
-        <header className="bg-blue-600 text-white flex justify-between items-center px-10 shadow">
-          <div className="flex items-center space-x-15">
-            <div className="text-xl font-bold tracking-wide">recam</div>
-            <nav className="flex space-x-8 text-sm">
-              <Link to="/listing-cases" className="hover:underline"> Listing Cases</Link>
-              <Link to="/all-agents" className="hover:underline">Agents</Link>
-              <Link to="/all-companies" className="hover:underline">Photography Companies</Link>
-            </nav>
-          </div>
-
-          {/*Logout button*/}
-          <button
-            onClick={handleLogout}
-            className="text-white hover:opacity-80 transition"
-            title="Logout">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 9V5.25a.75.75 0 00-.75-.75H5.25a.75.75 0 00-.75.75v13.5a.75.75 0 00.75.75h9.75a.75.75 0 00.75-.75V15m3 0l3-3m0 0l-3-3m3 3H9"
-              />
-            </svg>
-          </button>
-        </header>
-
-
         {/* Welcome Section */}
         <main>
           <h1 className="text-3xl font-semibold text-center text-gray-800 mb-4 py-4 ">
@@ -157,8 +123,8 @@ export default function ListingCasePage() {
               <input
                 type="text"
                 placeholder="Search from listing case"
-                value = {searchTerm}
-                onChange={(e)=>setSearchTerm(e.target.value)}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full border border-gray-300 rounded-full py-2 pl-10 pr-4 
                 text-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               />

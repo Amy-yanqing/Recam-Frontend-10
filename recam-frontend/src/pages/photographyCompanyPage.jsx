@@ -21,7 +21,6 @@ export default function PhotographyCompanyPage(){
 
     return(
           <div>
-
             <h2>Photography company Test Page</h2>
             {data ? (<pre>{JSON.stringify(data, null, 2)}</pre>) : (<p>Loading data...</p>)
             }

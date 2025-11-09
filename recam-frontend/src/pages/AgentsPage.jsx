@@ -24,7 +24,6 @@ export default function AgentsPage() {
 
     return (
         <div>
-
             <h2>Agents Test Page</h2>
             {data ? (<pre>{JSON.stringify(data, null, 2)}</pre>) : (<p>Loading data...</p>)
             }

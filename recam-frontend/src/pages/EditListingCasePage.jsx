@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ModuleCard from "../ui/ModuleCard";
 import { getListingById, updateListing } from "../apis/listingcases.api";
@@ -45,17 +45,6 @@ export default function EditListingCasePage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/*Header*/}
-      <header className="bg-blue-600 text-white flex justify-between items-center px-4 py-4 shadow">
-        <div className="text-2xl font-bold tracking-wide">recam</div>
-        <nav className="flex space-x-10 text-md">
-          <Link to="/listing-cases" className="hover:underline">ListingCases</Link>
-          <Link to="/all-agents" className="hover:underline">Agents</Link>
-          <Link to="/all-companies" className="hover:underline">Photography Companies</Link>
-        </nav>
-        <button>logout button</button>
-      </header>
-
       {/* Main Section */}
       <main className="flex flex-col items-center px-10 py-10">
 
