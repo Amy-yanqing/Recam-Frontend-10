@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"
 import CreatePropertyModal from "../components/CreatePropertyModal";
 import { getAllListings, deleteListingById } from "../apis/listingcases.api"
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import SearchBar from "../components/SearchBar";
 
 
 // Convert numeric PropertyType enum to readable text
@@ -35,44 +37,29 @@ function getListcasesStatusLabel(status) {
 
 export default function ListingCasePage() {
 
-  const [listings, setListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
 
-  const fetchData = async (searchQuery = {}) => {
-    console.log("Fetching listing data...");
-    setLoading(true);
-    setError("");
-    try {
-      const res = await getAllListings(searchQuery);
-      console.log("API response:", res.data);
-      setListings(res.data);
-    } catch (err) {
-      console.error("Error fetching listings", err)
-      setError("Faild to fetch listings")
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["listings", debouncedSearchTerm],
+    queryFn: () => getAllListings(debouncedSearchTerm ? { searchTerm: debouncedSearchTerm } : {}),
+    staleTime: 1000 * 60 * 5,
+    keepPreviousData: true,
+  })
 
-  useEffect(() => {
-    fetchData();
-
-  }, [])
+  const listings = data?.data || [];
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const query = searchTerm ? { searchTerm: searchTerm } : {};
-      fetchData(query);
-
+      setDebouncedSearchTerm(searchTerm);
     }, 400);
     return () => clearTimeout(timer);
-  }, [searchTerm]); //what is the code logical here?
+  }, [searchTerm])
 
 
   function handleEdit(id) {
@@ -80,20 +67,22 @@ export default function ListingCasePage() {
     navigate(`/edit-listing/${id}`)
   }
 
+  const handleSearchChange = useCallback((val) => {
+    setSearchTerm(val);
+  }, []);
+
   async function handleDelete(id) {
     if (!window.confirm("Are you sure you want to delete this listing?")) return;
-    setError("");
     try {
       await deleteListingById(id);
-      await fetchData();
+      queryClient.invalidateQueries(["listings"]);
     } catch {
       console.error("Failed to delete listing");
-      setError("Failed to delete listing");
     }
   }
 
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
         Loading listings...
@@ -101,9 +90,9 @@ export default function ListingCasePage() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (<div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
-      {error}
+      Error:{error.message || "Failed to load listings"}
     </div>)
 
   }
@@ -119,30 +108,10 @@ export default function ListingCasePage() {
 
           {/* Search + Create Button */}
           <div className="flex justify-center items-center mb-6 gap-4">
-            <div className="relative w-full max-w-md">
-              <input
-                type="text"
-                placeholder="Search from listing case"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border border-gray-300 rounded-full py-2 pl-10 pr-4 
-                text-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5 text-gray-400 absolute left-3 top-2.5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-            </div>
+            <SearchBar
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
             <button
               onClick={() => setShowModal(true)}
               className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
@@ -205,7 +174,9 @@ export default function ListingCasePage() {
       </div>
       {showModal && <CreatePropertyModal
         onClose={() => setShowModal(false)}
-        onCreated={fetchData}
+        onCreated={() => {
+          setShowModal(false); queryClient.invalidateQueries(["listings"]);
+        }}
       />}
 
     </>
