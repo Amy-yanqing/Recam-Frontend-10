@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ModuleCard from "../ui/ModuleCard";
+import ModuleCard from "../components/ui/ModuleCard";
 import { getListingById, updateListing } from "../apis/listingcases.api";
 import { toast } from 'react-hot-toast';
+import Breadcrumb from "../components/ui/BreadcrumbPath";
 
 
 
@@ -37,7 +38,7 @@ export default function EditListingCasePage() {
       console.error("Error delivering listing:", err);
       toast.error("Failed to deliver listing.");
     }
-  };
+  };//does this need to seprate as a single component?
 
 
   if (loading) return <div className="text-center mt-10">Loading...</div>
@@ -50,14 +51,7 @@ export default function EditListingCasePage() {
 
         <h1 className="text-3xl font-semibold mb-10 text-gray-800">Hi, Welcome!</h1>
         {/*Breadcrumb path*/}
-        <div className="max-w-6xl w-full">
-          <p className="text-gray-700 text-md mb-2">
-            Property &gt;{" "}
-            <span>
-              {listing.street}, {listing.city}, {listing.state}, {listing.postcode}
-            </span>
-          </p>
-        </div>
+        <Breadcrumb listing={listing}/>
         <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 mb-10">
           <ModuleCard title="Photography" icon="📸" to={`/photo-upload/${listing.id}`} />
           <ModuleCard title="Floor Plan" icon="📐" to={`/photo-upload/${listing.id}`} />

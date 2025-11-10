@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import CreatePropertyModal from "../components/CreatePropertyModal";
+import CreatePropertyModal from "../components/modals/CreatePropertyModal";
 import { getAllListings, deleteListingById } from "../apis/listingcases.api"
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/inputs/SearchBar";
 
 
 // Convert numeric PropertyType enum to readable text

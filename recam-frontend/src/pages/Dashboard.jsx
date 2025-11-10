@@ -1,4 +1,4 @@
-import CreatePropertyModal from "../components/CreatePropertyModal";
+import CreatePropertyModal from "../components/modals/CreatePropertyModal";
 import { useState } from "react";
 
 

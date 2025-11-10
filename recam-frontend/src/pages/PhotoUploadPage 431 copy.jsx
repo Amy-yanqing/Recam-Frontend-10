@@ -3,7 +3,6 @@ import { useMedia } from "../hooks/useMediaAssets"
 import toast from "react-hot-toast";
 import { getListingById } from "../apis/listingcases.api";
 import { useState, useEffect, useCallback } from "react";
-import UploadModal from "../components/modals/UploadModal";
 
 export default function PhotoUploadPage() {
   const { id } = useParams();
@@ -55,15 +54,15 @@ export default function PhotoUploadPage() {
   const handleRemoveFile = (indexToRemove) => {
     setSelectedFiles(prev => prev.filter((_, i) => i !== indexToRemove)
     )
-  }
+  } 
 
-  const handleDrop = (e) => {
+  const handleDrop =(e)=>{
     e.preventDefault();
-    const files = Array.from(e.dataTransfer.files);
-    setSelectedFiles(prev => [...prev, ...files])
-  };
+    const files =  Array.from(e.dataTransfer.files);
+    setSelectedFiles(prev=>[...prev,...files])
+  }; 
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e)=>{
     e.preventDefault();
   }
 
@@ -125,22 +124,95 @@ export default function PhotoUploadPage() {
         )
         }
       </main>
-      <UploadModal
-        isOpen={isModalOpen}
-        title="Upload Photos"
-        accept="image/*"
-        selectedFiles={selectedFiles||[]}
-        onFileChange={handleFileChange}
-        onRemoveFile={handleRemoveFile}
-        onUpload={handleUpload}
-        uploading={uploading}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedFiles([]);
-        }}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      />
+
+      {/* Upload Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          {/* Modal Container */}
+          <div className="bg-white border border-gray-200 p-6 rounded-md shadow-lg max-w-md w-full">
+            {/* Modal Title */}
+            <h2 className="text-xl font-bold mb-4">Upload Photos</h2>
+
+            {/* Upload area */}
+            <div className="border-2 border-dashed border-gray-300 rounded p-4 text-center"
+            onDrop= {handleDrop}
+            onDragOver={handleDragOver} >
+              <p className="text-gray-900 mb-4">Drop your images here to upload </p>
+              <label className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition" >
+                Choose Files
+                {/* Files Selecter */}
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            {/* Preview Selected images */}
+            {selectedFiles.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-700 mb-4">
+                  {selectedFiles.length} image(s) selected
+                </p>
+                <div className="grid grid-cols-4 gap-4">
+                  {selectedFiles.map((file, index) => {
+                    const previewUrl = URL.createObjectURL(file);
+                    return (
+                      <div key={index} className="relative group">
+                        <img
+                          src={previewUrl}
+                          alt={file.name}
+                          className="w-full h-32 object-cover rounded-md border"
+                        />
+                        <button
+                          onClick={() => { handleRemoveFile(index) }}
+                          className="absolute top-1 right-1 bg-red-600 text-white text-xs 
+                          px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+                          X
+                        </button>
+                      </div>
+
+                    )
+
+                  })}
+
+
+
+                </div>
+              </div>)
+
+            }
+
+            {/* Button Group */}
+            <div className="flex gap-2 justify-end">
+              {/* Cancel Button */}
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setSelectedFiles([]);
+                }}
+                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+                disabled={uploading}
+              >
+                Cancel
+              </button>
+
+              {/* Upload Button */}
+              <button
+                onClick={handleUpload}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+                disabled={uploading}
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 
