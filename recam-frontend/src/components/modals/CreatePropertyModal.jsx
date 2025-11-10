@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createListing } from "../apis/listingcases.api";
+import { createListing } from "../../apis/listingcases.api";
 
 export default function CreatePropertyModal({ onClose,onCreated }) {
     // Define form data that matches backend DTO fields
