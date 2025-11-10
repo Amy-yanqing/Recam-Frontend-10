@@ -1,13 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useMedia } from "../hooks/useMediaAssets"
 import toast from "react-hot-toast";
 import { getListingById } from "../apis/listingcases.api";
 import { useState, useEffect, useCallback } from "react";
-import UploadModal from "../components/modals/UploadModal";
+import MediaSection from "../components/media/MediaSection";
+
 
 export default function PhotoUploadPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { uploadMedia, deleteMedia, downloadMedia } = useMedia();
 
   const [photos, setPhotos] = useState([]);
@@ -30,9 +30,6 @@ export default function PhotoUploadPage() {
   }, [fetchPhotos]);
 
 
-  const handleFileChange = (e) => {
-    setSelectedFiles(Array.from(e.target.files));
-  };
 
   const handleUpload = async () => {
     if (!selectedFiles.length) {
@@ -43,103 +40,35 @@ export default function PhotoUploadPage() {
     await uploadMedia(id, selectedFiles, 1);
     setUploading(false);
     setSelectedFiles([]);
-    setIsModalOpen(false);
+    setIsModalOpen(false);//这个逻辑要怎么处理？如果我删除 const [isModalOpen, setIsModalOpen] = useState(false);
     await fetchPhotos();
   };
-
-  const handleDelete = async (photoId) => {
-    await deleteMedia(photoId);
-    await fetchPhotos();
-  }
-
-  const handleRemoveFile = (indexToRemove) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== indexToRemove)
-    )
-  }
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const files = Array.from(e.dataTransfer.files);
-    setSelectedFiles(prev => [...prev, ...files])
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  }
-
 
   return (
 
     <div className="p-8 min-h-screen bg-gray-50">
-      {/* Main content area */}
-      <main className="max-w-5xl mx-auto bg-white p-6 rounded-md shadow">
-
-        {/* Header*/}
-        <div className="flex justify-between items-center mb-8">
-
-          <div className="text-2xl font-bold text-gray-800"> Photography </div>
-          <button
-            onClick={() => navigate(`/edit-listing/${id}`)}
-            className="text-blue-600 font-semibold hover:underline">
-            Back
-          </button>
-        </div>
-
-        {/* Upload Button */}
-        <div className="text-center mb-6">
-          <button onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-          >Upload Photos
-          </button>
-        </div>
-
-        {/*Content area*/}
-        {photos.length === 0 ? (
-          <div className="bg-gray-100 text-gray-500 text-center py-8 rounded-md">
-            No photos uploaded yet
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 gap-4">
-            {photos.map((photo) => (
-              <div key={photo.id} className="relative group">
-                <img
-                  src={photo.mediaUrl}
-                  alt="Uploaded"
-                  className="w-full h-48 object-cover rounded-md"
-                />
-                <button
-                  onClick={() => downloadMedia(photo)}
-                  className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                >Download</button>
-                <button
-                  onClick={() => handleDelete(photo.id)}
-                  className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  Delete
-                </button>
-              </div>
-            ))
-            }
-          </div>
-
-        )
-        }
-      </main>
-      <UploadModal
-        isOpen={isModalOpen}
-        title="Upload Photos"
-        accept="image/*"
-        selectedFiles={selectedFiles||[]}
-        onFileChange={handleFileChange}
-        onRemoveFile={handleRemoveFile}
-        onUpload={handleUpload}
-        uploading={uploading}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedFiles([]);
+      <MediaSection
+        title="Photography"
+        backTo={`/edit-listing/${id}`}
+        mediaList={photos}
+        onDownload={downloadMedia}
+        onDelete={async (photoId) => {
+          await deleteMedia(photoId);
+          await fetchPhotos();
         }}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        onUpload={handleUpload}
+        selectedFiles={selectedFiles}
+        onFileChange={(e) => setSelectedFiles(Array.from(e.target.files))}
+        onRemoveFile={(index) =>
+          setSelectedFiles((prev) => prev.filter((_, i) => i !== index))
+        }
+        uploading={uploading}
+        onDrop={(e) => {
+          e.preventDefault();
+          const files = Array.from(e.dataTransfer.files);
+          setSelectedFiles((prev) => [...prev, ...files]);
+        }}
+        onDragOver={(e) => e.preventDefault()}
       />
     </div>
   )
