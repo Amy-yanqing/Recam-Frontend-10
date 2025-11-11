@@ -37,10 +37,10 @@ export default function PhotoUploadPage() {
       return;
     }
     setUploading(true);
-    await uploadMedia(id, selectedFiles, 1);
+    await uploadMedia(id, selectedFiles, 1);//这个 file type 要通过参数传进去吧
     setUploading(false);
     setSelectedFiles([]);
-    setIsModalOpen(false);//这个逻辑要怎么处理？如果我删除 const [isModalOpen, setIsModalOpen] = useState(false);
+    setIsModalOpen(false);
     await fetchPhotos();
   };
 
@@ -48,14 +48,17 @@ export default function PhotoUploadPage() {
 
     <div className="p-8 min-h-screen bg-gray-50">
       <MediaSection
+
         title="Photography"
         backTo={`/edit-listing/${id}`}
         mediaList={photos}
+
         onDownload={downloadMedia}
         onDelete={async (photoId) => {
           await deleteMedia(photoId);
           await fetchPhotos();
         }}
+
         onUpload={handleUpload}
         selectedFiles={selectedFiles}
         onFileChange={(e) => setSelectedFiles(Array.from(e.target.files))}
@@ -63,12 +66,17 @@ export default function PhotoUploadPage() {
           setSelectedFiles((prev) => prev.filter((_, i) => i !== index))
         }
         uploading={uploading}
+
         onDrop={(e) => {
           e.preventDefault();
           const files = Array.from(e.dataTransfer.files);
           setSelectedFiles((prev) => [...prev, ...files]);
         }}
         onDragOver={(e) => e.preventDefault()}
+
+        isModalOpen={isModalOpen}
+        onOpenModal={() => setIsModalOpen(true)}
+        onCloseModal={() => setIsModalOpen(false)}
       />
     </div>
   )

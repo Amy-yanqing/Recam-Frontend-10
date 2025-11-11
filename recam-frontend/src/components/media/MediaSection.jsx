@@ -5,7 +5,7 @@ import BackButton from "../ui/BackButton";
 import UploadButton from "../ui/UploadButton";
 import MediaGrid from "../ui/MediaGrid";
 import UploadModal from "../modals/UploadModal";
-import { useState } from "react";
+
 
 export default function MediaSection({
   title,               // Page title, e.g. "Photography"
@@ -20,10 +20,12 @@ export default function MediaSection({
   uploading,           // Uploading state (boolean)
   onDrop,              // Drag-and-drop handler
   onDragOver,          // Drag-over handler
+  isModalOpen,
+  onOpenModal,
+  onCloseModal,
   accept = "image/*",  // Accepted file types
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+ 
   return (
     <main className="max-w-5xl mx-auto bg-white p-6 rounded-md shadow">
       {/* ===== Header Section ===== */}
@@ -36,7 +38,7 @@ export default function MediaSection({
       <div className="text-center mb-6">
         <UploadButton
           label={`Upload ${title}`}
-          onClick={() => setIsModalOpen(true)}
+          onClick={onOpenModal}
         />
       </div>
 
@@ -57,7 +59,7 @@ export default function MediaSection({
         onRemoveFile={onRemoveFile}
         onUpload={onUpload}
         uploading={uploading}
-        onClose={() => setIsModalOpen(false)}
+        onClose={onCloseModal}
         onDrop={onDrop}
         onDragOver={onDragOver}
       />
