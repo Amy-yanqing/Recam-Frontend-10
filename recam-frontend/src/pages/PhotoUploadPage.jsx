@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { getListingById } from "../apis/listingcases.api";
 import { useState, useEffect, useCallback } from "react";
 import MediaSection from "../components/media/MediaSection";
+import { MEDIA_TYPE } from "../constants/mediaTypes";
 
 
 export default function PhotoUploadPage() {
@@ -37,7 +38,7 @@ export default function PhotoUploadPage() {
       return;
     }
     setUploading(true);
-    await uploadMedia(id, selectedFiles, 1);//这个 file type 要通过参数传进去吧
+    await uploadMedia(id, selectedFiles, MEDIA_TYPE.PHOTO);
     setUploading(false);
     setSelectedFiles([]);
     setIsModalOpen(false);

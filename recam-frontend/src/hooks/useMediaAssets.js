@@ -35,7 +35,7 @@ export function useMedia() {
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.download =`photo_${media.id}.jpg`;
+      link.download = media.fileName || `media_${media.id}`;
       link.click();
     } catch (error) {
       console.error("Download error:", error);
