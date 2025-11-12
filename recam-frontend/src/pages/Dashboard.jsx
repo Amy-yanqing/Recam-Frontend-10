@@ -6,6 +6,7 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
 
   return (
+    //这个只是dashboard example page 后续会删除，dashboard page 用listingcase page就行
     <>
       <div className="min-h-screen bg-white flex flex-col">
         {/* Welcome Section */}

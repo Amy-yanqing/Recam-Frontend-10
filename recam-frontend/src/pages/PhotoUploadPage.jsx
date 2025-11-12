@@ -46,6 +46,7 @@ export default function PhotoUploadPage() {
   };
 
   return (
+    //这个后续要改为引用单独的4个组件 不用这个包裹在一起的
 
     <div className="p-8 min-h-screen bg-gray-50">
       <MediaSection

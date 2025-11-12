@@ -1,36 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import CreatePropertyModal from "../components/modals/CreatePropertyModal";
-import { getAllListings, deleteListingById } from "../apis/listingcases.api"
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import SearchBar from "../components/inputs/SearchBar";
 import ListingCaseTable from "../components/table/ListingCaseTable";
+import { useListings } from "../hooks/useListings";
+import useDebouncedValue from "../hooks/useDebouncedValue"
+import LoadingOrError from "../components/common/LoadingOrError";
 
 
 export default function ListingCasePage() {
 
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 400);
+  const { listings, isLoading, isError, error, deleteListing } = useListings(debouncedSearchTerm)
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
-
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["listings", debouncedSearchTerm],
-    queryFn: () => getAllListings(debouncedSearchTerm ? { searchTerm: debouncedSearchTerm } : {}),
-    staleTime: 1000 * 60 * 5,
-    keepPreviousData: true,
-  })
-
-  const listings = data?.data || [];
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchTerm])
 
 
   function handleEdit(id) {
@@ -42,31 +26,6 @@ export default function ListingCasePage() {
     setSearchTerm(val);
   }, []);
 
-  async function handleDelete(id) {
-    if (!window.confirm("Are you sure you want to delete this listing?")) return;
-    try {
-      await deleteListingById(id);
-      queryClient.invalidateQueries(["listings"]);
-    } catch {
-      console.error("Failed to delete listing");
-    }
-  }
-
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
-        Loading listings...
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (<div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
-      Error:{error.message || "Failed to load listings"}
-    </div>)
-
-  }
 
   return (
     <>
@@ -88,17 +47,23 @@ export default function ListingCasePage() {
               className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
               +Create Property
             </button>
+            {/* Loading or Error */}
+            <LoadingOrError isLoading={isLoading} isError={isError} error={error} />
 
           </div>
-          <ListingCaseTable listings={listings} onEdit={handleEdit} onDelete={handleDelete} />
+          {/* Only show table if data is ready */}
+          {!isLoading && !isError && (
+            <ListingCaseTable
+              listings={listings}
+              onEdit={handleEdit}
+              onDelete={deleteListing}
+            />
+          )}
         </main>
 
       </div>
       {showModal && <CreatePropertyModal
         onClose={() => setShowModal(false)}
-        onCreated={() => {
-          setShowModal(false); queryClient.invalidateQueries(["listings"]);
-        }}
       />}
 
     </>

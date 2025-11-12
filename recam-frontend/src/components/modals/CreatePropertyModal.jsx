@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { createListing } from "../../apis/listingcases.api";
 
-export default function CreatePropertyModal({ onClose,onCreated }) {
+
+export default function CreatePropertyModal({ onClose}) {
     // Define form data that matches backend DTO fields
     const [form, setForm] = useState({
         title: "",
@@ -50,8 +51,9 @@ export default function CreatePropertyModal({ onClose,onCreated }) {
 
             await createListing(dataToSend);
             alert("Property created successfully!");
-            onCreated();
+
             onClose(); // Close modal after success
+
             window.location.reload(); // Temporary solution to refresh table
         } catch (err) {
             console.error(err);
