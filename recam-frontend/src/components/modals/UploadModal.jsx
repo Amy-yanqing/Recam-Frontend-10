@@ -18,7 +18,7 @@ export default function UploadModal({
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                 >
-                    <p className="text-gray-900 mb-4">Drop your images here to upload</p>
+                    <p className="text-gray-900 mb-4">Drop your items here to upload</p>
                     <label className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition">
                         Choose Files
                         <input

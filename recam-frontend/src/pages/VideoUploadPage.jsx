@@ -7,27 +7,27 @@ import MediaSection from "../components/media/MediaSection";
 import { MEDIA_TYPE } from "../constants/mediaTypes";
 
 
-export default function FloorPlanUploadPage() {
+export default function VideoUploadPage() {
   const { id } = useParams();
   const { uploadMedia, deleteMedia, downloadMedia } = useMedia();
 
-  const [floorPlans, setFloorPlans] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const fetchFloorPlans = useCallback(async () => {
+  const fetchVideos = useCallback(async () => {
     try {
-      const res = await mediaAssetApi.getMediaAssetsByType(id,MEDIA_TYPE.FLOORPLAN);
-      setFloorPlans(res.data || []);
+      const res = await mediaAssetApi.getMediaAssetsByType(id,MEDIA_TYPE.VIDEO);
+      setVideos(res.data || []);
     } catch (err) {
-      console.error("Error fetching Floor plans:", err);
+      console.error("Error fetching Videos:", err);
     }
   }, [id]);
 
   useEffect(() => {
-   fetchFloorPlans();
-  }, [fetchFloorPlans]);
+   fetchVideos();
+  }, [fetchVideos]);
 
 
   const handleUpload = async () => {
@@ -36,11 +36,11 @@ export default function FloorPlanUploadPage() {
       return;
     }
     setUploading(true);
-    await uploadMedia(id, selectedFiles, MEDIA_TYPE.FLOORPLAN);
+    await uploadMedia(id, selectedFiles, MEDIA_TYPE.VIDEO);
     setUploading(false);
     setSelectedFiles([]);
     setIsModalOpen(false);
-    await fetchFloorPlans();
+    await fetchVideos();
   };
 
   return (
@@ -48,14 +48,14 @@ export default function FloorPlanUploadPage() {
     <div className="p-8 min-h-screen bg-gray-50">
       <MediaSection
 
-        title="Floor Plan"
+        title="Videography"
         backTo={`/edit-listing/${id}`}
-        mediaList={floorPlans}
+        mediaList={videos}
 
         onDownload={downloadMedia}
-        onDelete={async (floorPlanId) => {
-          await deleteMedia(floorPlanId);
-          await fetchFloorPlans();
+        onDelete={async (videoId) => {
+          await deleteMedia(videoId);
+          await fetchVideos();
         }}
 
         onUpload={handleUpload}

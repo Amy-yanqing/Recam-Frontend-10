@@ -9,6 +9,7 @@ import PhotoUploadPage from "./pages/PhotoUploadPage";
 import { Toaster } from 'react-hot-toast';
 import MainLayout from "./layouts/MainLayout";
 import FloorPlanUploadPage from "./pages/FloorPlanUploadPage";
+import VideoUploadPage from "./pages/VideoUploadPage";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/edit-listing/:id" element={<EditListingCasePage />} />
           <Route path="/photo-upload/:id" element={<PhotoUploadPage />} />
           <Route path="floorPlan-upload/:id" element={<FloorPlanUploadPage/>}/>
+          <Route path="video-upload/:id" element={<VideoUploadPage/>}/>
         </Route>
       </Routes>
     </>
