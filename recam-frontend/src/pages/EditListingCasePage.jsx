@@ -52,7 +52,7 @@ export default function EditListingCasePage() {
         <Breadcrumb listing={listing} />
         <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 mb-10">
           <ModuleCard title="Photography" icon="📸" to={`/photo-upload/${listing.id}`} />
-          <ModuleCard title="Floor Plan" icon="📐" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="Floor Plan" icon="📐" to={`/floorPlan-upload/${listing.id}`} />
           <ModuleCard title="Videography" icon="🎥" to={`/photo-upload/${listing.id}`} />
           <ModuleCard title="VR Tour" icon="🕶️" to={`/photo-upload/${listing.id}`} />
           <ModuleCard title="Agents" icon="👤" to={`/photo-upload/${listing.id}`} />

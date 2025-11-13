@@ -11,7 +11,7 @@ export default function Header() {
                 <div className="flex items-center space-x-16">
                     {/* Clickable logo */}
                     <Link
-                        to="/listing-cases"
+                        to="/dashboard"
                         className="text-3xl font-bold tracking-wide"
                     >recam
                     </Link>

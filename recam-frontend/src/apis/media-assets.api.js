@@ -6,6 +6,9 @@ const mediaAssetApi = {
   getMediaByListingId(listingCaseId) {
     return api.get(`/api/ListingCase/${listingCaseId}/media`);
   },
+  getMediaAssetsByType(listingCaseId, mediaType) {
+    return api.get(`/api/ListingCase/${listingCaseId}/media/${mediaType}`)
+  },
 
   // Upload media files
   uploadMediaAssets(listingCaseId, files, type) {

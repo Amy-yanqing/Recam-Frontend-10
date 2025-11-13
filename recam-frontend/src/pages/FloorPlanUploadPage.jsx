@@ -1,35 +1,36 @@
 import { useParams } from "react-router-dom"
 import { useMedia } from "../hooks/useMediaAssets"
 import toast from "react-hot-toast";
-import mediaAssetApi from "../apis/media-assets.api";
+import { getListingById } from "../apis/listingcases.api";
 import { useState, useEffect, useCallback } from "react";
 import MediaSection from "../components/media/MediaSection";
 import { MEDIA_TYPE } from "../constants/mediaTypes";
 
 
-export default function PhotoUploadPage() {
+export default function FloorPlanUploadPage() {
   const { id } = useParams();
   const { uploadMedia, deleteMedia, downloadMedia } = useMedia();
 
-  const [photos, setPhotos] = useState([]);
+  const [floorPlans, setFloorPlans] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
 
 
-  const fetchPhotos = useCallback(async () => {
+  const fetchFloorPlans = useCallback(async () => {
     try {
-      const res = await mediaAssetApi.getMediaAssetsByType(id,MEDIA_TYPE.PHOTO);
-      setPhotos(res.data || []);
-
+      const res = await getListingById(id);
+      setFloorPlans(res.data.mediaAssets || []);// 这个media 可以有多种类型吧？
     } catch (err) {
-      console.error("Error fetching photos:", err);
+      console.error("Error fetching Floor plans:", err);
     }
   }, [id]);
 
   useEffect(() => {
-    fetchPhotos();
-  }, [fetchPhotos]);
+    setFloorPlans();
+  }, [fetchFloorPlans]);
+
+
 
   const handleUpload = async () => {
     if (!selectedFiles.length) {
@@ -37,11 +38,11 @@ export default function PhotoUploadPage() {
       return;
     }
     setUploading(true);
-    await uploadMedia(id, selectedFiles, MEDIA_TYPE.PHOTO);
+    await uploadMedia(id, selectedFiles, MEDIA_TYPE.FLOORPLAN);
     setUploading(false);
     setSelectedFiles([]);
     setIsModalOpen(false);
-    await fetchPhotos();
+    await fetchFloorPlans();
   };
 
   return (
@@ -50,14 +51,14 @@ export default function PhotoUploadPage() {
     <div className="p-8 min-h-screen bg-gray-50">
       <MediaSection
 
-        title="Photography"
+        title="Floor Plan"
         backTo={`/edit-listing/${id}`}
-        mediaList={photos}
+        mediaList={floorPlans}
 
         onDownload={downloadMedia}
-        onDelete={async (photoId) => {
-          await deleteMedia(photoId);
-          await fetchPhotos();
+        onDelete={async (floorPlanId) => {
+          await deleteMedia(floorPlanId);
+          await fetchFloorPlans();
         }}
 
         onUpload={handleUpload}

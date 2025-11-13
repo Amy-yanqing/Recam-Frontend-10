@@ -13,4 +13,6 @@ export const updateListing = (listingCaseId, data) => { return api.patch(`/api/L
 
 export const getListingById = (listingCaseId) => { return api.get(`api/ListingCase/${listingCaseId}`) }
 
+
+
 export const deleteListingById = (listingCaseId) => { return api.delete(`api/ListingCase/${listingCaseId}`) }
