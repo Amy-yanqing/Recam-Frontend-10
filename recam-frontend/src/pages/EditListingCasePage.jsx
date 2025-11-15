@@ -4,7 +4,8 @@ import ModuleCard from "../components/ui/ModuleCard";
 import { getListingById, updateListing } from "../apis/listingcases.api";
 import { toast } from 'react-hot-toast';
 import Breadcrumb from "../components/ui/BreadcrumbPath";
-import UpdatePropertyModal from "../components/modals/UpdatePropertyModal";
+import UpdatePropertyModal from "../components/modals/UpdatePropertyModal"
+import VrUploadModal from "../components/modals/VrUploadModal";
 
 
 
@@ -13,6 +14,7 @@ export default function EditListingCasePage() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showVrModal, setShowVrModal] = useState(false);
 
   const fetchListing = useCallback(async () => {
     try {
@@ -58,7 +60,7 @@ export default function EditListingCasePage() {
           <ModuleCard title="Photography" icon="📸" to={`/photo-upload/${listing.id}`} />
           <ModuleCard title="Floor Plan" icon="📐" to={`/floorPlan-upload/${listing.id}`} />
           <ModuleCard title="Videography" icon="🎥" to={`/video-upload/${listing.id}`} />
-          <ModuleCard title="VR Tour" icon="🕶️" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="VR Tour" icon="🕶️" onClick={() => setShowVrModal(true)} />
           <ModuleCard title="Agents" icon="👤" to={`/photo-upload/${listing.id}`} />
           <ModuleCard title="Property Details" icon="🏠" onClick={() => setShowUpdateModal(true)} />
         </section>
@@ -70,8 +72,15 @@ export default function EditListingCasePage() {
       </main>
 
       {showUpdateModal && (<UpdatePropertyModal onClose={() => setShowUpdateModal(false)}
-        listingCaseId={listing.id}/>)
+        listingCaseId={listing.id} />)
       }
+
+      {showVrModal && (
+        <VrUploadModal
+          isOpen={showVrModal}
+          onClose={() => setShowVrModal(false)}
+        />
+      )}
     </div>
   )
 
