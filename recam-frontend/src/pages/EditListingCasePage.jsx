@@ -1,31 +1,35 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ModuleCard from "../components/ui/ModuleCard";
 import { getListingById, updateListing } from "../apis/listingcases.api";
 import { toast } from 'react-hot-toast';
 import Breadcrumb from "../components/ui/BreadcrumbPath";
+import UpdatePropertyModal from "../components/modals/UpdatePropertyModal";
+
 
 
 export default function EditListingCasePage() {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+  const fetchListing = useCallback(async () => {
+    try {
+      const res = await getListingById(id);
+      setListing({ ...res.data });
+
+    } catch (err) {
+      console.log("Error fetching listing:", err)
+    }
+  }, [id]);
+
 
   //Fetch listing details by ID
   useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        const res = await getListingById(id);
-        setListing(res.data);
-
-      } catch (err) {
-        console.log("Error fetching listing:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchListing();
-  }, [id])
+    setLoading(true);
+    fetchListing().finally(() => { setLoading(false) });
+  }, [fetchListing])
 
 
   const handleDeliver = async () => {
@@ -56,7 +60,7 @@ export default function EditListingCasePage() {
           <ModuleCard title="Videography" icon="🎥" to={`/video-upload/${listing.id}`} />
           <ModuleCard title="VR Tour" icon="🕶️" to={`/photo-upload/${listing.id}`} />
           <ModuleCard title="Agents" icon="👤" to={`/photo-upload/${listing.id}`} />
-          <ModuleCard title="Property Details" icon="🏠" to={`/photo-upload/${listing.id}`} />
+          <ModuleCard title="Property Details" icon="🏠" onClick={() => setShowUpdateModal(true)} />
         </section>
 
         <button onClick={handleDeliver} className="bg-blue-500 text-gray-100 px-8 py-4 
@@ -64,7 +68,12 @@ export default function EditListingCasePage() {
         </button>
 
       </main>
-    </div>)
+
+      {showUpdateModal && (<UpdatePropertyModal onClose={() => setShowUpdateModal(false)}
+        listingCaseId={listing.id}/>)
+      }
+    </div>
+  )
 
 }
 

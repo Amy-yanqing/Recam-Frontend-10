@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import CreatePropertyModal from "../components/modals/CreatePropertyModal";
+
 import SearchBar from "../components/inputs/SearchBar";
 import ListingCaseTable from "../components/table/ListingCaseTable";
 import { useListings } from "../hooks/useListings";
@@ -13,7 +14,7 @@ export default function ListingCasePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 400);
   const { listings, isLoading, isError, error, deleteListing } = useListings(debouncedSearchTerm)
-  const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const navigate = useNavigate();
 
 
@@ -43,7 +44,7 @@ export default function ListingCasePage() {
               onChange={handleSearchChange}
             />
             <button
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowCreateModal(true)}
               className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
               +Create Property
             </button>
@@ -62,8 +63,8 @@ export default function ListingCasePage() {
         </main>
 
       </div>
-      {showModal && <CreatePropertyModal
-        onClose={() => setShowModal(false)}
+      {showCreateModal && <CreatePropertyModal
+        onClose={() => setShowCreateModal(false)}
       />}
 
     </>

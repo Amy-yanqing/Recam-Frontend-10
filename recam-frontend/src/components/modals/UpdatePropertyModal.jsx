@@ -1,25 +1,43 @@
-import { useState } from "react";
-import { createListing } from "../../apis/listingcases.api";
+import { useEffect, useState } from "react";
+import { getListingById, updateListing } from "../../apis/listingcases.api";
 
 
-export default function CreatePropertyModal({ onClose }) {
+
+
+export default function UpdatePropertyModal({ onClose, listingCaseId }) {
     // Define form data that matches backend DTO fields
-    const [form, setForm] = useState({
-        title: "",
-        description: "",
-        street: "",
-        city: "",
-        state: "",
-        postcode: "",
-        price: "",
-        bedrooms: 0,
-        bathrooms: 0,
-        garages: 0,
-        floorArea: 0,
-        propertyType: "",
-        saleCategory: "",
-        listcaseStatus: "Created", // default value
-    });
+
+    const [form, setForm] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const res = await getListingById(listingCaseId);
+                const data = res.data;
+                setForm({
+                    title: data.title || "",
+                    description: data.description || "",
+                    street: data.street || "",
+                    city: data.city || "",
+                    state: data.state || "",
+                    postcode: data.postcode || "",
+                    price: data.price || "",
+                    bedrooms: data.bedrooms || "",
+                    bathrooms: data.bathrooms || "",
+                    garages: data.garages || "",
+                    floorArea: data.floorArea || "",
+                    propertyType: data.propertyType || "",
+                    saleCategory: data.saleCategory || "",
+                    listcaseStatus: data.listcaseStatus || 1,
+                });
+                setLoading(false);
+            } catch (err) {
+                console.error("Failed to load listing:", err);
+            }
+        } fetchData();
+    }, [listingCaseId])
 
     // Handle input value changes
     const handleChange = (e) => {
@@ -30,43 +48,44 @@ export default function CreatePropertyModal({ onClose }) {
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Convert numeric fields before sending to backend
+        const payload = {
+            Title: form.title,
+            Description: form.description,
+            Street: form.street,
+            City: form.city,
+            State: form.state,
+            Postcode: parseInt(form.postcode || 0),
+            Price: parseFloat(form.price || 0),
+            Bedrooms: parseInt(form.bedrooms || 0),
+            Bathrooms: parseInt(form.bathrooms || 0),
+            Garages: parseInt(form.garages || 0),
+            FloorArea: parseFloat(form.floorArea || 0),
+            PropertyType: parseInt(form.propertyType || 0),
+            SaleCategory: parseInt(form.saleCategory || 0),
+            ListcaseStatus: parseInt(form.listcaseStatus || 1),
+        };
+
         try {
-            // Convert numeric fields before sending to backend
-            const dataToSend = {
-                Title: form.title,
-                Description: form.description,
-                Street: form.street,
-                City: form.city,
-                State: form.state,
-                Postcode: parseInt(form.postcode || 0),
-                Price: parseFloat(form.price || 0),
-                Bedrooms: parseInt(form.bedrooms || 0),
-                Bathrooms: parseInt(form.bathrooms || 0),
-                Garages: parseInt(form.garages || 0),
-                FloorArea: parseFloat(form.floorArea || 0),
-                PropertyType: parseInt(form.propertyType || 0),
-                SaleCategory: parseInt(form.saleCategory || 0),
-                ListcaseStatus: 1, // default value: Created
-            };
-
-            await createListing(dataToSend);
-            alert("Property created successfully!");
-
-            onClose(); // Close modal after success
+            await updateListing(listingCaseId, payload);
+            alert("Property updated successfully!");
+            onClose();
             window.location.reload();// Temporary solution to refresh table
 
         } catch (err) {
             console.error(err);
-            alert("Failed to create property.");
+            alert("Failed to update property.");
         }
     };
+
+    if (loading) return <div>Loading...</div>;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6 overflow-y-auto max-h-[90vh]">
                 {/* Header */}
                 <div className="flex justify-between items-center border-b pb-3 mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">Create Property</h2>
+                    <h2 className="text-xl font-semibold text-gray-800">Update Property</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-800 transition">
                         ✕
                     </button>
