@@ -10,6 +10,8 @@ import { Toaster } from 'react-hot-toast';
 import MainLayout from "./layouts/MainLayout";
 import FloorPlanUploadPage from "./pages/FloorPlanUploadPage";
 import VideoUploadPage from "./pages/VideoUploadPage";
+import VrUploadPage from "./pages/VrUploadPage";
+
 
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
           <Route path="/photo-upload/:id" element={<PhotoUploadPage />} />
           <Route path="floorPlan-upload/:id" element={<FloorPlanUploadPage/>}/>
           <Route path="video-upload/:id" element={<VideoUploadPage/>}/>
+          <Route path="vr-upload/:id" element={<VrUploadPage/>}/>
         </Route>
       </Routes>
     </>
