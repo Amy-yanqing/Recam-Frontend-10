@@ -1,32 +1,29 @@
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import CreatePropertyModal from "../components/modals/CreatePropertyModal";
 
 import SearchBar from "../components/inputs/SearchBar";
 import ListingCaseTable from "../components/table/ListingCaseTable";
 import { useListings } from "../hooks/useListings";
-import useDebouncedValue from "../hooks/useDebouncedValue"
+import useDebouncedValue from "../hooks/useDebouncedValue";
 import LoadingOrError from "../components/common/LoadingOrError";
 
-
 export default function ListingCasePage() {
-
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 400);
-  const { listings, isLoading, isError, error, deleteListing } = useListings(debouncedSearchTerm)
+  const { listings, isLoading, isError, error, deleteListing } =
+    useListings(debouncedSearchTerm);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const navigate = useNavigate();
 
-
   function handleEdit(id) {
-    console.log("Edit listing with ID:", id)
-    navigate(`/edit-listing/${id}`)
+    console.log("Edit listing with ID:", id);
+    navigate(`/edit-listing/${id}`);
   }
 
   const handleSearchChange = useCallback((val) => {
     setSearchTerm(val);
   }, []);
-
 
   return (
     <>
@@ -39,18 +36,19 @@ export default function ListingCasePage() {
 
           {/* Search + Create Button */}
           <div className="flex justify-center items-center mb-6 gap-4">
-            <SearchBar
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
+            <SearchBar value={searchTerm} onChange={handleSearchChange} />
             <button
               onClick={() => setShowCreateModal(true)}
-              className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+              className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
               +Create Property
             </button>
             {/* Loading or Error */}
-            <LoadingOrError isLoading={isLoading} isError={isError} error={error} />
-
+            <LoadingOrError
+              isLoading={isLoading}
+              isError={isError}
+              error={error}
+            />
           </div>
           {/* Only show table if data is ready */}
           {!isLoading && !isError && (
@@ -61,15 +59,10 @@ export default function ListingCasePage() {
             />
           )}
         </main>
-
       </div>
-      {showCreateModal && <CreatePropertyModal
-        onClose={() => setShowCreateModal(false)}
-      />}
-
+      {showCreateModal && (
+        <CreatePropertyModal onClose={() => setShowCreateModal(false)} />
+      )}
     </>
-
-  )
-
-
+  );
 }
